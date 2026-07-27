@@ -78,7 +78,7 @@ enum Localization {
             "Theme": "Theme",
             "Default": "Default",
             "Light": "Light",
-            "Colorless": "Colorless",
+            "Monochrome": "Monochrome",
         ],
         "ru": [
             "Automatically start break after focus session": "Автоматически начинать перерыв после сессии",
@@ -137,7 +137,7 @@ enum Localization {
             "Theme": "Тема",
             "Default": "Стандартная",
             "Light": "Светлая",
-            "Colorless": "Бесцветная",
+            "Monochrome": "Монохром",
         ],
     ]
 }

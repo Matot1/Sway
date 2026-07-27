@@ -60,7 +60,7 @@ struct ExpandedNotchView: View {
             .padding(.vertical, 4)
             .background(
                 viewModel.selectedTab == tab
-                    ? tab == .music ? Color.red : ThemeColors.accent(theme)
+                    ? tab == .music && theme != "monochrome" ? Color.red : ThemeColors.accent(theme)
                     : Color.clear
             )
             .clipShape(Capsule())

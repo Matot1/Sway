@@ -1,7 +1,12 @@
 import SwiftUI
 
 func currentTheme() -> String {
-    UserDefaults.standard.string(forKey: "theme") ?? "dark"
+    let t = UserDefaults.standard.string(forKey: "theme") ?? "dark"
+    if t == "colorless" {
+        UserDefaults.standard.set("monochrome", forKey: "theme")
+        return "monochrome"
+    }
+    return t
 }
 
 struct ThemeColors {
@@ -9,7 +14,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return .white
-        case "colorless": return Color(white: 0.95)
+        case "monochrome": return Color(white: 0.6)
         default: return .black
         }
     }
@@ -18,7 +23,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return Color(white: 0.9)
-        case "colorless": return Color(white: 0.9)
+        case "monochrome": return Color(white: 0.9)
         default: return Color(white: 0.15)
         }
     }
@@ -26,7 +31,7 @@ struct ThemeColors {
     static func text(_ theme: String? = nil) -> Color {
         let t = theme ?? currentTheme()
         switch t {
-        case "light", "colorless": return .black
+        case "light", "monochrome": return .black
         default: return .white
         }
     }
@@ -35,7 +40,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return .black.opacity(0.5)
-        case "colorless": return .black.opacity(0.4)
+        case "monochrome": return .black.opacity(0.4)
         default: return .white.opacity(0.5)
         }
     }
@@ -44,7 +49,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return .black.opacity(0.3)
-        case "colorless": return .black.opacity(0.3)
+        case "monochrome": return .black.opacity(0.3)
         default: return .white.opacity(0.3)
         }
     }
@@ -61,7 +66,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return Color(white: 0.95)
-        case "colorless": return Color(white: 0.95)
+        case "monochrome": return Color(white: 0.95)
         default: return Color.white.opacity(0.05)
         }
     }
@@ -70,7 +75,7 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return .black.opacity(0.1)
-        case "colorless": return .black.opacity(0.08)
+        case "monochrome": return .black.opacity(0.08)
         default: return .white.opacity(0.2)
         }
     }
@@ -79,30 +84,30 @@ struct ThemeColors {
         let t = theme ?? currentTheme()
         switch t {
         case "light": return Color(white: 0.85)
-        case "colorless": return Color(white: 0.85)
+        case "monochrome": return Color(white: 0.85)
         default: return Color(white: 0.15)
         }
     }
 
     static func accent(_ theme: String? = nil) -> Color {
         let t = theme ?? currentTheme()
-        if t == "colorless" {
+        if t == "monochrome" {
             return Color(white: 0.4)
         }
-        return Color(red: 137/255, green: 52/255, blue: 235/255)
+        return Color(red: 106/255, green: 0/255, blue: 244/255)
     }
 
     static func accentDim(_ theme: String? = nil) -> Color {
         let t = theme ?? currentTheme()
-        if t == "colorless" {
+        if t == "monochrome" {
             return Color(white: 0.4).opacity(0.4)
         }
-        return Color(red: 137/255, green: 52/255, blue: 235/255).opacity(0.4)
+        return Color(red: 106/255, green: 0/255, blue: 244/255).opacity(0.4)
     }
 
     static func toggleTint(_ theme: String? = nil) -> Color {
         let t = theme ?? currentTheme()
-        if t == "colorless" {
+        if t == "monochrome" {
             return Color(white: 0.5)
         }
         return .orange

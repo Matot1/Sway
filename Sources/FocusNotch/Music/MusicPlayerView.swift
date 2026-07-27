@@ -7,7 +7,7 @@ struct MusicPlayerView: View {
     @State private var dominantColor: Color? = nil
 
     private var isDarkBg: Bool {
-        guard let c = dominantColor else { return theme != "light" && theme != "colorless" }
+        guard let c = dominantColor else { return theme != "light" && theme != "monochrome" }
         let uiC = NSColor(c)
         let lum = 0.299 * uiC.redComponent + 0.587 * uiC.greenComponent + 0.114 * uiC.blueComponent
         return lum < 0.5

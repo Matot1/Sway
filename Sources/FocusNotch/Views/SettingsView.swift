@@ -165,7 +165,7 @@ struct GeneralSettingsView: View {
                     Picker("", selection: $theme) {
                         Text(tr("Default")).tag("dark")
                         Text(tr("Light")).tag("light")
-                        Text(tr("Colorless")).tag("colorless")
+                        Text(tr("Monochrome")).tag("monochrome")
                     }
                     .pickerStyle(.menu)
                     .tint(.orange)
