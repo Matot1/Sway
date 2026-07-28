@@ -1,13 +1,13 @@
-FocusNotch/
+Sway/
 ├── Package.swift                        # Swift Package Manager конфиг (macOS 14+)
 ├── Info.plist                           # LSUIElement = true (без иконки в Dock)
 ├── build.sh                             # Скрипт сборки .app бандла
 │
 └── Sources/
-    └── FocusNotch/
+    └── Sway/
         │
         ├── App/                         # ——— Entry Point ———
-        │   ├── FocusNotchApp.swift      # @main, SwiftUI App, Settings Scene
+        │   ├── SwayApp.swift            # @main, SwiftUI App, Settings Scene
         │   └── AppDelegate.swift        # NSApplicationDelegate, запуск оверлейного окна
         │
         ├── Notch/                       # ——— Notch Overlay ———

@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(openSettings),
-            name: NSNotification.Name("OpenFocusNotchSettings"),
+            name: NSNotification.Name("OpenSwaySettings"),
             object: nil
         )
 

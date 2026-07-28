@@ -27,7 +27,7 @@ struct ExpandedNotchView: View {
             HStack(spacing: 4) {
                 Button(action: {
                     viewModel.collapseNotch()
-                    NotificationCenter.default.post(name: NSNotification.Name("OpenFocusNotchSettings"), object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name("OpenSwaySettings"), object: nil)
                 }) {
                     HStack(spacing: 4) {
                         Image(systemName: "gearshape")

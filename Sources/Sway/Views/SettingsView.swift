@@ -66,7 +66,7 @@ struct SettingsView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "power")
                         .font(.system(size: 10))
-                    Text(tr("Quit FocusNotch"))
+                    Text(tr("Quit Sway"))
                         .font(.system(size: 10))
                 }
                 .foregroundColor(.red.opacity(0.6))
@@ -363,7 +363,7 @@ struct AboutSettingsView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                Text(tr("FocusNotch"))
+                Text(tr("Sway"))
                     .font(.custom("Forza Thin", size: 18))
                     .foregroundColor(.white)
 

@@ -1,7 +1,7 @@
-# FocusNotch
+# Sway
 
 <p align="center">
-  <img src="app-icon.png" width="128" alt="FocusNotch">
+  <img src="app-icon.png" width="128" alt="Sway">
 </p>
 
 Ru: MacOS-приложение, интерактивная панель в челке экрана с таймером Pomodoro и музыкой.
@@ -27,15 +27,15 @@ En: MacOS Application: Interactive Menu Bar Panel with Pomodoro Timer and Music
 ## RU: Установка
 
 1. Скачайте последнюю версию со [страницы релизов](https://github.com/Matot1/FocusNotch/releases)
-2. Распакуйте архив и переместите `FocusNotch.app` в папку `Программы`
+2. Распакуйте архив и переместите `Sway.app` в папку `Программы`
 3. Запустите приложение (потребуется подтверждение Gatekeeper)
-4. Если Gatekeeper блокирует запуск, выполните в терминале:  _sudo xattr -dr com.apple.quarantine /Applications/FocusNotch.app_
+4. Если Gatekeeper блокирует запуск, выполните в терминале:  _sudo xattr -dr com.apple.quarantine /Applications/Sway.app_
 
 ## EN: Installation
 1. Download the latest version from the [Releases page](https://github.com/Matot1/FocusNotch/releases)
-2. Extract the archive and move `FocusNotch.app` to the `Applications folder`
+2. Extract the archive and move `Sway.app` to the `Applications folder`
 3. Launch the application (Gatekeeper confirmation may be required)
-4. If Gatekeeper blocks the launch, run the following in the terminal:  _sudo xattr -dr com.apple.quarantine /Applications/FocusNotch.app_
+4. If Gatekeeper blocks the launch, run the following in the terminal:  _sudo xattr -dr com.apple.quarantine /Applications/Sway.app_
 
 > **Requirements:** macOS 14+, Xcode 15+ or Command Line Tools
 

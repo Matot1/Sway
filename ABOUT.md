@@ -1,4 +1,4 @@
-# FocusNotch
+# Sway
 
 macOS-приложение, превращающее челку (notch) в интерактивный Dynamic Island с Pomodoro таймером и управлением музыкой.
 
@@ -20,7 +20,7 @@ macOS-приложение, превращающее челку (notch) в ин�
 - Круговой прогресс-бар
 - Звуковые оповещения: "Bottle" (старт), "Blow" (перерыв)
 - **Mini timer** — всегда поверх окон, отображает оставшееся время
-- **Цвет** — purple RGB(128,0,128): play/pause, прогресс-бар, selected tab
+- **Цвет** — purple RGB(137,52,235): play/pause, прогресс-бар, selected tab
 
 ## Music Integration
 

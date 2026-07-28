@@ -41,7 +41,7 @@ enum Localization {
             "Language": "Language",
             "English": "English",
             "Russian": "Russian",
-            "Quit FocusNotch": "Quit FocusNotch",
+            "Quit Sway": "Quit Sway",
 
             "Focus Duration": "Focus Duration",
             "Coffee Break Time": "Coffee Break Time",
@@ -55,10 +55,10 @@ enum Localization {
             "Full Concentration": "Full Concentration",
             "Disable macOS notification when timer starting": "Open Focus settings to enable",
 
-            "FocusNotch": "FocusNotch",
+            "Sway": "Sway",
             "Version 0.3.5": "Version 0.3.5",
             "Developer": "Developer",
-            "FocusNotch Team": "FocusNotch Team",
+            "Sway Team": "Sway Team",
             "Built with": "Built with",
             "SwiftUI + AppKit": "SwiftUI + AppKit",
 
@@ -101,7 +101,7 @@ enum Localization {
             "Language": "Язык",
             "English": "Английский",
             "Russian": "Русский",
-            "Quit FocusNotch": "Выйти из FocusNotch",
+            "Quit Sway": "Выйти из Sway",
 
             "Focus Duration": "Длительность фокуса",
             "Coffee Break Time": "Время кофе",
@@ -115,10 +115,10 @@ enum Localization {
             "Full Concentration": "Полная концентрация",
             "Disable macOS notification when timer starting": "Открыть настройки Focus для включения",
 
-            "FocusNotch": "FocusNotch",
+            "Sway": "Sway",
             "Version 0.3.5": "Версия 0.3.5",
             "Developer": "Разработчик",
-            "FocusNotch Team": "Команда FocusNotch",
+            "Sway Team": "Команда Sway",
             "Built with": "Создано с",
             "SwiftUI + AppKit": "SwiftUI + AppKit",
 

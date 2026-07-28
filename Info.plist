@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>FocusNotch</string>
+    <string>Sway</string>
     <key>CFBundleDisplayName</key>
-    <string>FocusNotch</string>
+    <string>Sway</string>
     <key>CFBundleIdentifier</key>
-    <string>com.focusnotch.app</string>
+    <string>com.sway.app</string>
     <key>CFBundleVersion</key>
     <string>4</string>
     <key>CFBundleShortVersionString</key>
@@ -17,13 +17,13 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleIconFile</key>
-    <string>FocusNotch</string>
+    <string>Sway</string>
     <key>CFBundleExecutable</key>
-    <string>FocusNotch</string>
+    <string>Sway</string>
     <key>LSUIElement</key>
     <true/>
     <key>NSAppleEventsUsageDescription</key>
-    <string>FocusNotch needs access to control music playback.</string>
+    <string>Sway needs access to control music playback.</string>
     <key>NSAppleScriptEnabled</key>
     <true/>
 </dict>

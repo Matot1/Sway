@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "FocusNotch",
+    name: "Sway",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "FocusNotch", targets: ["FocusNotch"])
+        .executable(name: "Sway", targets: ["Sway"])
     ],
     targets: [
         .executableTarget(
-            name: "FocusNotch"
+            name: "Sway"
         )
     ]
 )
