@@ -129,7 +129,9 @@ git push origin main 2>&1
 
 echo "==> Tagging..."
 git tag "$TAG" 2>/dev/null || true
-git push origin "$TAG" 2>&1
+if git push origin "$TAG" 2>&1 | grep -q "rejected"; then
+    echo "    tag $TAG already exists on remote (created via API), skipping"
+fi
 
 echo ""
 echo "✅ Release $TAG published:"
