@@ -62,39 +62,23 @@ if [ -z "$RELEASE_ID" ]; then
 fi
 
 echo "==> Uploading asset ($ZIP_NAME, $((SIZE/1024)) KB)..."
-python3 - "$TOKEN" "$REPO" "$RELEASE_ID" "$ZIP_NAME" "/tmp/$ZIP_NAME" <<'PYEOF'
-import sys, json, urllib.request, uuid
-
-token, repo, release_id, filename, filepath = sys.argv[1:6]
-url = f"https://uploads.github.com/repos/{repo}/releases/{release_id}/assets?name={filename}"
-boundary = uuid.uuid4().hex
-
-with open(filepath, "rb") as f:
-    filedata = f.read()
-
-body = (
-    f"--{boundary}\r\n"
-    f'Content-Disposition: form-data; name="file"; filename="{filename}"\r\n'
-    f"Content-Type: application/zip\r\n\r\n"
-).encode() + filedata + f"\r\n--{boundary}--\r\n".encode()
-
-req = urllib.request.Request(url, data=body, method="POST")
-req.add_header("Authorization", f"token {token}")
-req.add_header("Content-Type", f"multipart/form-data; boundary={boundary}")
-req.add_header("Content-Length", str(len(body)))
-
-try:
-    with urllib.request.urlopen(req) as resp:
-        d = json.loads(resp.read().decode())
-        print("    asset:", d.get("name"))
-except urllib.error.HTTPError as e:
-    err = e.read().decode()
-    if "already_exists" in err or e.code == 422:
-        print("    asset already exists, skipping upload")
-    else:
-        print("    ERROR uploading:", err[:300])
-        sys.exit(1)
-PYEOF
+UPLOAD_URL="https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$ZIP_NAME"
+RESPONSE=$(curl -sL --max-time 300 -X POST \
+    -H "Authorization: token $TOKEN" \
+    -H "Content-Type: application/zip" \
+    --data-binary @"/tmp/$ZIP_NAME" \
+    "$UPLOAD_URL")
+ASSET_NAME=$(echo "$RESPONSE" | python3 -c "import json,sys; print(json.load(sys.stdin).get('name', ''))" 2>/dev/null || echo "")
+if [ -z "$ASSET_NAME" ]; then
+    if echo "$RESPONSE" | grep -q "already_exists"; then
+        echo "    asset already exists, skipping upload"
+    else
+        echo "    ERROR uploading: ${RESPONSE:0:300}"
+        exit 1
+    fi
+else
+    echo "    asset: $ASSET_NAME"
+fi
 
 echo "==> Updating appcast.xml..."
 DATE=$(date -R)
