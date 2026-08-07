@@ -1,9 +1,11 @@
 import Cocoa
 import SwiftUI
+import Sparkle
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var notchWindowController: NotchWindowController?
     private var settingsWindowController: SettingsWindowController?
+    private var updaterController: SPUStandardUpdaterController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -20,9 +22,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
 
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(checkForUpdates),
+            name: NSNotification.Name("CheckForUpdates"),
+            object: nil
+        )
+
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+
         DispatchQueue.main.async { [weak self] in
             self?.setupNotchWindow()
         }
+    }
+
+    @objc private func checkForUpdates() {
+        updaterController?.checkForUpdates(nil)
     }
 
     private func setupNotchWindow() {

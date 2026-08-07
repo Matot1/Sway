@@ -57,6 +57,8 @@ enum Localization {
 
             "Sway": "Sway",
             "Version 0.3.5": "Version 0.3.5",
+            "Version": "Version",
+            "Check for Updates": "Check for Updates",
             "Developer": "Developer",
             "Sway Team": "Sway Team",
             "Built with": "Built with",
@@ -117,6 +119,8 @@ enum Localization {
 
             "Sway": "Sway",
             "Version 0.3.5": "Версия 0.3.5",
+            "Version": "Версия",
+            "Check for Updates": "Проверить обновления",
             "Developer": "Разработчик",
             "Sway Team": "Команда Sway",
             "Built with": "Создано с",

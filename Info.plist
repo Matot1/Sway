@@ -9,9 +9,9 @@
     <key>CFBundleIdentifier</key>
     <string>com.sway.app</string>
     <key>CFBundleVersion</key>
-    <string>4</string>
+    <string>0.4.3</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.3.5</string>
+    <string>0.4.3</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -26,5 +26,13 @@
     <string>Sway needs access to control music playback.</string>
     <key>NSAppleScriptEnabled</key>
     <true/>
+    <key>SUFeedURL</key>
+    <string>https://raw.githubusercontent.com/Matot1/Sway/main/appcast.xml</string>
+    <key>SUEnableAutomaticChecks</key>
+    <true/>
+    <key>SUAutomaticallyUpdate</key>
+    <false/>
+    <key>SPARKLE_ED_25519_KEY</key>
+    <string>oILz0X73Gs7/j4WDlduE3UAaSp9CwqtupcFTtm7tR78=</string>
 </dict>
 </plist>

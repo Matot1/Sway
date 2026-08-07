@@ -6,3 +6,4 @@
 *.xcuserdata
 Pods/
 *.zip
+.keys/

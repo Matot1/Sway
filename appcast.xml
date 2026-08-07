@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Sway</title>
+    <description>Most recent changes with links to updates.</description>
+    <language>en</language>
+    <item>
+      <title>Version 0.4.3</title>
+      <pubDate>Wed, 29 Jul 2026 09:43:00 +0300</pubDate>
+      <sparkle:version>0.4.3</sparkle:version>
+      <sparkle:shortVersionString>0.4.3</sparkle:shortVersionString>
+      <description>Rename to Sway, new Monochrome theme, Sparkle auto-updates</description>
+      <enclosure url="https://github.com/Matot1/Sway/releases/download/v0.4.3/Sway-v0.4.3.zip"
+                 sparkle:edSignature="XjVlbxszejlZz0g0B381Ch1s5iW8AJEIUH8s3x4XkFjxtDM52VVY8Z5A8FxffncR/Mp3vrRrWMSjPIc74hljCQ=="
+                 length="3384009"
+                 type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>

@@ -360,6 +360,11 @@ struct NotificationSettingsView: View {
 
 struct AboutSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
+
+    private var version: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.3"
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -367,9 +372,23 @@ struct AboutSettingsView: View {
                     .font(.custom("Forza Thin", size: 18))
                     .foregroundColor(.white)
 
-                Text(tr("Version 0.3.5"))
+                Text(tr("Version") + " \(version)")
                     .font(.custom("Forza Thin", size: 11))
                     .foregroundColor(.white.opacity(0.4))
+
+                Button(action: {
+                    NotificationCenter.default.post(name: NSNotification.Name("CheckForUpdates"), object: nil)
+                }) {
+                    Text(tr("Check for Updates"))
+                        .font(.custom("Forza Thin", size: 12))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.12))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.white)
+                .padding(.top, 4)
 
                 Text("Developer: Telegram — @Mato_o")
                     .font(.custom("Forza Thin", size: 11))
