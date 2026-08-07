@@ -32,6 +32,7 @@ enum Localization {
 
             "Launch at Login": "Launch at Login",
             "Music Integration": "Music Integration",
+            "Choose your music service": "Choose your music service",
             "Spotify, Apple Music, Yandex Music": "Spotify, Apple Music, Yandex Music",
             "Yandex Music Token": "Yandex Music Token",
             "Enter your token": "Enter your token",
@@ -94,6 +95,7 @@ enum Localization {
 
             "Launch at Login": "Автозапуск",
             "Music Integration": "Интеграция музыки",
+            "Choose your music service": "Выберите музыкальный сервис",
             "Spotify, Apple Music, Yandex Music": "Spotify, Apple Music, Яндекс Музыка",
             "Yandex Music Token": "Токен Яндекс Музыки",
             "Enter your token": "Введите токен",

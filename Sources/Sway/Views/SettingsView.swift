@@ -84,6 +84,7 @@ struct GeneralSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
     @AppStorage("launchAtLogin") private var launchAtLogin = false
     @AppStorage("theme") private var theme: String = "dark"
+    @AppStorage("musicProvider") private var musicProvider: String = MusicProvider.yandexMusic.storageKey
 
     var body: some View {
         ScrollView {
@@ -116,11 +117,36 @@ struct GeneralSettingsView: View {
                 .background(Color.white.opacity(0.05))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                SettingRow(
-                    icon: "music.note",
-                    title: tr("Music Integration"),
-                    description: tr("Spotify, Apple Music, Yandex Music")
-                )
+                HStack(spacing: 10) {
+                    Image(systemName: "music.note")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white.opacity(0.6))
+                        .frame(width: 20)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(tr("Music Integration"))
+                            .font(.custom("Forza Thin", size: 12))
+                            .foregroundColor(.white)
+                        Text(tr("Choose your music service"))
+                            .font(.custom("Forza Thin", size: 10))
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+
+                    Spacer()
+
+                    Picker("", selection: $musicProvider) {
+                        ForEach(MusicProvider.allCases, id: \.self) { provider in
+                            Text(tr(provider.rawValue)).tag(provider.storageKey)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.orange)
+                    .frame(width: 120)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color.white.opacity(0.05))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 HStack(spacing: 10) {
                     Image(systemName: "globe")
@@ -362,7 +388,7 @@ struct AboutSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
 
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.3"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.4"
     }
 
     var body: some View {
@@ -405,32 +431,3 @@ struct AboutSettingsView: View {
 
 // MARK: - Shared Components
 
-struct SettingRow: View {
-    let icon: String
-    let title: String
-    let description: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundColor(.white.opacity(0.6))
-                .frame(width: 20)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.custom("Forza Thin", size: 12))
-                    .foregroundColor(.white)
-                Text(description)
-                    .font(.custom("Forza Thin", size: 10))
-                    .foregroundColor(.white.opacity(0.4))
-            }
-
-            Spacer()
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(Color.white.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-}

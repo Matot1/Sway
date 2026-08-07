@@ -18,6 +18,18 @@ enum MusicProvider: String, CaseIterable, Codable {
         case .yandexMusic: return "music.note.list"
         }
     }
+
+    var storageKey: String {
+        switch self {
+        case .spotify: return "spotify"
+        case .appleMusic: return "appleMusic"
+        case .yandexMusic: return "yandexMusic"
+        }
+    }
+
+    static func fromStorageKey(_ key: String) -> MusicProvider? {
+        Self.allCases.first { $0.storageKey == key }
+    }
 }
 
 struct Track: Identifiable, Equatable {
