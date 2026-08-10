@@ -5,6 +5,17 @@
     <description>Most recent changes with links to updates.</description>
     <language>en</language>
     <item>
+      <title>Version 0.4.5</title>
+      <pubDate>Mon, 10 Aug 2026 16:53:35 +0300</pubDate>
+      <sparkle:version>0.4.5</sparkle:version>
+      <sparkle:shortVersionString>0.4.5</sparkle:shortVersionString>
+      <description>Small fixes</description>
+      <enclosure url="https://github.com/Matot1/Sway/releases/download/v0.4.5/Sway-v0.4.5.zip"
+                 sparkle:edSignature="QYT9f7av/c6S9C4CnZi6WVizon6WlNCWv9BNswjwywSBOB5MI0s6sFePEhcyyzpbKIQrTTbS24Wy636KQvtEBw=="
+                 length="3394305"
+                 type="application/octet-stream"/>
+    </item>
+    <item>
       <title>Version 0.4.4</title>
       <pubDate>Fri, 07 Aug 2026 11:14:16 +0300</pubDate>
       <sparkle:version>0.4.4</sparkle:version>
