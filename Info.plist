@@ -2,37 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>Sway</string>
-    <key>CFBundleDisplayName</key>
-    <string>Sway</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.sway.app</string>
-    <key>CFBundleVersion</key>
-    <string>0.4.4</string>
-    <key>CFBundleShortVersionString</key>
-    <string>0.4.4</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleIconFile</key>
-    <string>Sway</string>
-    <key>CFBundleExecutable</key>
-    <string>Sway</string>
-    <key>LSUIElement</key>
-    <true/>
-    <key>NSAppleEventsUsageDescription</key>
-    <string>Sway needs access to control music playback.</string>
-    <key>NSAppleScriptEnabled</key>
-    <true/>
-    <key>SUFeedURL</key>
-    <string>https://raw.githubusercontent.com/Matot1/Sway/main/appcast.xml</string>
-    <key>SUEnableAutomaticChecks</key>
-    <true/>
-    <key>SUAutomaticallyUpdate</key>
-    <false/>
-    <key>SPARKLE_ED_25519_KEY</key>
-    <string>oILz0X73Gs7/j4WDlduE3UAaSp9CwqtupcFTtm7tR78=</string>
+	<key>CFBundleDisplayName</key>
+	<string>Sway</string>
+	<key>CFBundleExecutable</key>
+	<string>Sway</string>
+	<key>CFBundleIconFile</key>
+	<string>Sway</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.sway.app</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Sway</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.4.5</string>
+	<key>CFBundleVersion</key>
+	<string>0.4.5</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Sway needs access to control music playback.</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
+	<key>SPARKLE_ED_25519_KEY</key>
+	<string>oILz0X73Gs7/j4WDlduE3UAaSp9CwqtupcFTtm7tR78=</string>
+	<key>SUAutomaticallyUpdate</key>
+	<false/>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/Matot1/Sway/main/appcast.xml</string>
 </dict>
 </plist>

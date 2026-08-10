@@ -86,6 +86,14 @@ struct GeneralSettingsView: View {
     @AppStorage("theme") private var theme: String = "dark"
     @AppStorage("musicProvider") private var musicProvider: String = MusicProvider.yandexMusic.storageKey
 
+    private var themeLabel: String {
+        switch theme {
+        case "light": return tr("Light")
+        case "monochrome": return tr("Monochrome")
+        default: return tr("Default")
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
@@ -134,14 +142,20 @@ struct GeneralSettingsView: View {
 
                     Spacer()
 
-                    Picker("", selection: $musicProvider) {
+                    Menu {
                         ForEach(MusicProvider.allCases, id: \.self) { provider in
-                            Text(tr(provider.rawValue)).tag(provider.storageKey)
+                            Button {
+                                musicProvider = provider.storageKey
+                            } label: {
+                                Text(tr(provider.rawValue))
+                            }
                         }
+                    } label: {
+                        Text(tr(MusicProvider.fromStorageKey(musicProvider)?.rawValue ?? musicProvider))
+                            .foregroundColor(.orange)
+                            .font(.custom("Forza Thin", size: 12))
                     }
-                    .pickerStyle(.menu)
-                    .tint(.orange)
-                    .frame(width: 120)
+                    .menuStyle(.borderlessButton)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -160,16 +174,23 @@ struct GeneralSettingsView: View {
 
                     Spacer()
 
-                    Picker("", selection: Binding(
-                        get: { self.loc.language },
-                        set: { self.loc.setLanguage($0) }
-                    )) {
-                        Text(tr("English")).tag("en")
-                        Text(tr("Russian")).tag("ru")
+                    Menu {
+                        Button {
+                            loc.setLanguage("en")
+                        } label: {
+                            Text(tr("English"))
+                        }
+                        Button {
+                            loc.setLanguage("ru")
+                        } label: {
+                            Text(tr("Russian"))
+                        }
+                    } label: {
+                        Text(tr(loc.language == "ru" ? "Russian" : "English"))
+                            .foregroundColor(.orange)
+                            .font(.custom("Forza Thin", size: 12))
                     }
-                    .pickerStyle(.menu)
-                    .tint(.orange)
-                    .frame(width: 100)
+                    .menuStyle(.borderlessButton)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -188,14 +209,28 @@ struct GeneralSettingsView: View {
 
                     Spacer()
 
-                    Picker("", selection: $theme) {
-                        Text(tr("Default")).tag("dark")
-                        Text(tr("Light")).tag("light")
-                        Text(tr("Monochrome")).tag("monochrome")
+                    Menu {
+                        Button {
+                            theme = "dark"
+                        } label: {
+                            Text(tr("Default"))
+                        }
+                        Button {
+                            theme = "light"
+                        } label: {
+                            Text(tr("Light"))
+                        }
+                        Button {
+                            theme = "monochrome"
+                        } label: {
+                            Text(tr("Monochrome"))
+                        }
+                    } label: {
+                        Text(themeLabel)
+                            .foregroundColor(.orange)
+                            .font(.custom("Forza Thin", size: 12))
                     }
-                    .pickerStyle(.menu)
-                    .tint(.orange)
-                    .frame(width: 100)
+                    .menuStyle(.borderlessButton)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -388,7 +423,7 @@ struct AboutSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
 
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.4"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.5"
     }
 
     var body: some View {
@@ -397,6 +432,10 @@ struct AboutSettingsView: View {
                 Text(tr("Sway"))
                     .font(.custom("Forza Thin", size: 18))
                     .foregroundColor(.white)
+
+                Image(nsImage: NSApplication.shared.applicationIconImage)
+                    .resizable()
+                    .frame(width: 72, height: 72)
 
                 Text(tr("Version") + " \(version)")
                     .font(.custom("Forza Thin", size: 11))
