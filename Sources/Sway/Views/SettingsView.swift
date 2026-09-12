@@ -17,29 +17,33 @@ enum SettingsTab: String, CaseIterable {
     }
 }
 
+final class SettingsNavigation: ObservableObject {
+    @Published var selectedTab: SettingsTab = .general
+}
+
 struct SettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
-    @State private var selectedTab: SettingsTab = .general
+    @ObservedObject var navigation: SettingsNavigation
 
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
                 ForEach(SettingsTab.allCases, id: \.self) { tab in
-                    Button(action: { selectedTab = tab }) {
+                    Button(action: { navigation.selectedTab = tab }) {
                         HStack(spacing: 5) {
                             Image(systemName: tab.icon)
                                 .font(.system(size: 11))
                             Text(tr(tab.rawValue))
                                 .font(.system(size: 11, weight: .medium))
                         }
-                        .foregroundColor(selectedTab == tab ? .white : .white.opacity(0.5))
+                        .foregroundColor(navigation.selectedTab == tab ? .white : .white.opacity(0.5))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .background(selectedTab == tab ? Color.white.opacity(0.15) : Color.clear)
+                        .background(navigation.selectedTab == tab ? Color.white.opacity(0.15) : Color.clear)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                         .overlay(
                             RoundedRectangle(cornerRadius: 6)
-                                .stroke(selectedTab == tab ? Color.white.opacity(0.2) : Color.clear, lineWidth: 1)
+                                .stroke(navigation.selectedTab == tab ? Color.white.opacity(0.2) : Color.clear, lineWidth: 1)
                         )
                     }
                     .buttonStyle(.plain)
@@ -50,7 +54,7 @@ struct SettingsView: View {
             .padding(.bottom, 4)
 
             Group {
-                switch selectedTab {
+                switch navigation.selectedTab {
                 case .general:
                     GeneralSettingsView()
                 case .timer:
@@ -423,7 +427,7 @@ struct AboutSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
 
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.5"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.6"
     }
 
     var body: some View {

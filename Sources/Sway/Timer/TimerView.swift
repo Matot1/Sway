@@ -78,6 +78,21 @@ struct TimerView: View {
                 RoundedRectangle(cornerRadius: 7)
                     .stroke(viewModel.isOnBreak ? .orange : .clear, lineWidth: 1)
             )
+            .contentShape(RoundedRectangle(cornerRadius: 7))
+            .onTapGesture {
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("OpenSwaySettings"),
+                    object: nil,
+                    userInfo: ["tab": SettingsTab.timer.rawValue]
+                )
+            }
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.pointingHand.push()
+                } else {
+                    NSCursor.pop()
+                }
+            }
 
             Button(action: {
                 if !viewModel.isOnBreak {

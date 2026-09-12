@@ -17,8 +17,8 @@ struct ManagerView: View {
                 } else {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            ForEach(Array(clipboardManager.screenshots.enumerated()), id: \.offset) { index, image in
-                                Image(nsImage: image)
+                            ForEach(clipboardManager.screenshots) { shot in
+                                Image(nsImage: shot.thumbnail)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 84, height: 52)
@@ -28,7 +28,7 @@ struct ManagerView: View {
                                             .stroke(ThemeColors.stroke(theme), lineWidth: 1)
                                     )
                                     .onTapGesture {
-                                        handleTap(image)
+                                        handleTap(shot)
                                     }
                                     .help(tr("Click to copy"))
                             }
@@ -39,6 +39,9 @@ struct ManagerView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 4)
+            .onAppear {
+                clipboardManager.pollNow()
+            }
 
             if let text = flashText {
                 Text(text)
@@ -53,8 +56,8 @@ struct ManagerView: View {
         }
     }
 
-    private func handleTap(_ image: NSImage) {
-        let alreadyCopied = clipboardManager.copyBack(image)
+    private func handleTap(_ shot: ClipboardScreenshot) {
+        let alreadyCopied = clipboardManager.copyBack(shot)
         showFlash(alreadyCopied ? tr("Already Copy!") : tr("Copy!"))
     }
 

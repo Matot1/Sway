@@ -4,6 +4,7 @@ import Combine
 
 class SettingsWindowController: NSWindowController {
     private var cancellables = Set<AnyCancellable>()
+    let navigation = SettingsNavigation()
 
     static func create() -> SettingsWindowController {
         let window = NSWindow(
@@ -17,12 +18,12 @@ class SettingsWindowController: NSWindowController {
         window.backgroundColor = NSColor(white: 0.12, alpha: 1)
         window.center()
 
-        let hostingView = NSHostingView(rootView: SettingsView())
+        let controller = SettingsWindowController(window: window)
+        let hostingView = NSHostingView(rootView: SettingsView(navigation: controller.navigation))
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor(white: 0.12, alpha: 1).cgColor
         window.contentView = hostingView
 
-        let controller = SettingsWindowController(window: window)
         controller.observeLanguageChanges()
         return controller
     }
@@ -35,7 +36,10 @@ class SettingsWindowController: NSWindowController {
             .store(in: &cancellables)
     }
 
-    func show() {
+    func show(tab: SettingsTab? = nil) {
+        if let tab {
+            navigation.selectedTab = tab
+        }
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }

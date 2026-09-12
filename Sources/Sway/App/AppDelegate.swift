@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         UserDefaults.standard.register(defaults: [
             "soundAlerts": true,
             "fullConcentration": false,
+            "autoStartBreak": false,
         ])
 
         NotificationCenter.default.addObserver(
@@ -49,10 +50,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         notchWindowController?.showWindow(nil)
     }
 
-    @objc private func openSettings() {
+    @objc private func openSettings(_ notification: Notification) {
+        notchWindowController?.viewModel.collapseNotch()
         if settingsWindowController == nil {
             settingsWindowController = SettingsWindowController.create()
         }
-        settingsWindowController?.show()
+        let tab = (notification.userInfo?["tab"] as? String).flatMap(SettingsTab.init(rawValue:))
+        settingsWindowController?.show(tab: tab)
     }
 }

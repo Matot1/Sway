@@ -10,8 +10,8 @@ class PomodoroViewModel: ObservableObject {
 
     var config = PomodoroConfig()
 
-    private var timer: AnyCancellable?
-    private var lastTickTime: Date?
+    private var timer: Timer?
+    private var endDate: Date?
 
     // cached values from when the current session started, for detecting config changes
     private var sessionWorkDuration: TimeInterval = 0
@@ -25,6 +25,10 @@ class PomodoroViewModel: ObservableObject {
             .sink { [weak self] _ in
                 self?.syncConfig()
             }
+    }
+
+    deinit {
+        timer?.invalidate()
     }
 
     private func syncConfig() {
@@ -88,9 +92,15 @@ class PomodoroViewModel: ObservableObject {
 
     var formattedTime: String {
         let displayTime = state == .idle ? config.workDuration : timeRemaining
-        let minutes = Int(displayTime) / 60
-        let seconds = Int(displayTime) % 60
+        let totalSeconds = Self.displaySeconds(displayTime)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
         return "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
+    }
+
+    private static func displaySeconds(_ time: TimeInterval) -> Int {
+        guard time > 0 else { return 0 }
+        return Int(ceil(time))
     }
 
     var isOnBreak: Bool { state == .break_ || state == .longBreak }
@@ -118,9 +128,12 @@ class PomodoroViewModel: ObservableObject {
     }
 
     func pause() {
-        timer?.cancel()
+        if let endDate {
+            timeRemaining = max(0, endDate.timeIntervalSinceNow)
+        }
+        timer?.invalidate()
         timer = nil
-        lastTickTime = nil
+        endDate = nil
         isRunning = false
     }
 
@@ -153,32 +166,44 @@ class PomodoroViewModel: ObservableObject {
     }
 
     private func startTimer() {
-        lastTickTime = Date()
+        timer?.invalidate()
+        endDate = Date().addingTimeInterval(timeRemaining)
         isRunning = true
-        timer = Timer.publish(every: 0.1, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.tick()
-            }
+        scheduleNextTick()
     }
 
-    private func tick() {
-        let now = Date()
-        guard let lastTick = lastTickTime else {
-            lastTickTime = now
+    private func scheduleNextTick() {
+        timer?.invalidate()
+        guard let endDate else { return }
+
+        let remaining = endDate.timeIntervalSinceNow
+        if remaining <= 0 {
+            tick()
             return
         }
 
-        let elapsed = now.timeIntervalSince(lastTick)
-        lastTickTime = now
+        let fraction = remaining - floor(remaining)
+        let delay = fraction > 0.0005 ? fraction : 1.0
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
+            self?.tick()
+        }
+        timer.tolerance = 0.02
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
+    }
 
-        let newRemaining = max(0, timeRemaining - elapsed)
-        timeRemaining = newRemaining
-
-        if newRemaining <= 0 {
+    private func tick() {
+        guard let endDate else { return }
+        let remaining = max(0, endDate.timeIntervalSinceNow)
+        if Self.displaySeconds(remaining) != Self.displaySeconds(timeRemaining) || remaining <= 0 {
+            timeRemaining = remaining
+        }
+        if remaining <= 0 {
             pause()
             completeCurrentState()
+            return
         }
+        scheduleNextTick()
     }
 
     private func completeCurrentState() {
@@ -187,14 +212,18 @@ class PomodoroViewModel: ObservableObject {
         switch state {
         case .working:
             totalSessions += 1
-            moveToNextState()
+            if UserDefaults.standard.bool(forKey: "autoStartBreak") {
+                moveToNextState()
+            } else {
+                currentSession += 1
+                cacheCurrentConfig()
+                timeRemaining = sessionWorkDuration
+                return
+            }
         case .break_, .longBreak:
             moveToNextState()
         default:
             break
-        }
-
-        if state == .idle {
         }
 
         if state != .idle {

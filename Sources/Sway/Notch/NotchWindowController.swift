@@ -6,6 +6,8 @@ class NotchWindowController: NSWindowController {
     let viewModel: NotchViewModel
     private var cancellables = Set<AnyCancellable>()
     private var globalClickMonitor: Any?
+    private var globalMouseMonitor: Any?
+    private var localMouseMonitor: Any?
     private var miniTimerWindow: NSWindow?
     private var miniTimerHostingView: NSHostingView<MiniTimerView>?
     private var coffeeIconWindow: NSWindow?
@@ -16,6 +18,7 @@ class NotchWindowController: NSWindowController {
     private var screenFrame: NSRect = .zero
     private var notchRegion: NSRect = .zero
     private var isInitialPositionSet = false
+    private var pillHeight: CGFloat = 32
 
     private init(window: NSWindow, viewModel: NotchViewModel) {
         self.viewModel = viewModel
@@ -45,6 +48,7 @@ class NotchWindowController: NSWindowController {
 
         let controller = NotchWindowController(window: window, viewModel: viewModel)
         controller.setupInitialPosition()
+        controller.setupMouseMonitoring()
         controller.setupMiniTimer()
 
         NotificationCenter.default.addObserver(
@@ -58,9 +62,7 @@ class NotchWindowController: NSWindowController {
     }
 
     deinit {
-        if let monitor = globalClickMonitor {
-            NSEvent.removeMonitor(monitor)
-        }
+        removeEventMonitors()
         miniTimerWindow?.orderOut(nil)
         coffeeIconWindow?.orderOut(nil)
         focusIconWindow?.orderOut(nil)
@@ -73,6 +75,7 @@ class NotchWindowController: NSWindowController {
         screenFrame = screen.frame
 
         let safeTop = screen.safeAreaInsets.top
+        pillHeight = safeTop
         let notchWidth: CGFloat = 200
         notchRegion = NSRect(
             x: screenMidX - notchWidth / 2,
@@ -91,15 +94,15 @@ class NotchWindowController: NSWindowController {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.isInitialPositionSet = true
+            self?.checkMousePosition()
+            self?.updateMiniWindows()
         }
-
-        setupMouseMonitoring()
     }
 
     private func setupMiniTimer() {
         let pVM = viewModel.pomodoroViewModel
         let safeTop = NSScreen.main?.safeAreaInsets.top ?? 32
-        let pillHeight = safeTop
+        pillHeight = safeTop
         let cornerR: CGFloat = 14
 
         let timerWindow = NSWindow(
@@ -150,93 +153,113 @@ class NotchWindowController: NSWindowController {
         focusWindow.contentView = NSHostingView(rootView: FocusIconView(musicViewModel: viewModel.musicViewModel, cornerRadius: cornerR))
         focusIconWindow = focusWindow
 
-        Timer.publish(every: 0.2, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                let notchState = viewModel.notchState
+        Publishers.CombineLatest3(
+            viewModel.$notchState,
+            pVM.$isRunning,
+            pVM.$state
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] _, _, _ in
+            self?.updateMiniWindows()
+        }
+        .store(in: &cancellables)
+    }
 
-                let timerVisible = pVM.isRunning && notchState != .expanded
-                if timerVisible {
-                    let w: CGFloat = 300
-                    let h: CGFloat = pillHeight
-                    let x = screenMidX - 150
-                    let y = screenTopY - h
-                    timerWindow.setFrame(NSRect(x: x, y: y, width: w, height: h), display: true)
-                    miniTimerHostingView?.frame = NSRect(x: 0, y: 0, width: w, height: h)
-                    timerWindow.orderFrontRegardless()
-                } else {
-                    timerWindow.orderOut(nil)
-                }
+    private func updateMiniWindows() {
+        guard let timerWindow = miniTimerWindow,
+              let coffeeWindow = coffeeIconWindow,
+              let focusWindow = focusIconWindow else { return }
 
-                let coffeeVisible = pVM.isRunning && pVM.isOnBreak && notchState != .expanded
-                if coffeeVisible {
-                    let w: CGFloat = 32
-                    let h: CGFloat = pillHeight
-                    let x = screenMidX + 150 - 26
-                    let y = screenTopY - h
-                    coffeeWindow.setFrame(NSRect(x: x, y: y, width: w, height: h), display: true)
-                    coffeeWindow.orderFrontRegardless()
-                } else {
-                    coffeeWindow.orderOut(nil)
-                }
+        let running = viewModel.pomodoroViewModel.isRunning
+        let showPills = running && viewModel.notchState != .expanded
+        let onBreak = viewModel.pomodoroViewModel.isOnBreak
+        let height = pillHeight
 
-                let focusVisible = pVM.isRunning && !pVM.isOnBreak && notchState != .expanded
-                if focusVisible {
-                    let w: CGFloat = 32
-                    let h: CGFloat = pillHeight
-                    let x = screenMidX + 150 - 26
-                    let y = screenTopY - h
-                    focusWindow.setFrame(NSRect(x: x, y: y, width: w, height: h), display: true)
-                    focusWindow.orderFrontRegardless()
-                } else {
-                    focusWindow.orderOut(nil)
-                }
-            }
-            .store(in: &cancellables)
+        if showPills {
+            let timerFrame = NSRect(x: screenMidX - 150, y: screenTopY - height, width: 300, height: height)
+            timerWindow.setFrame(timerFrame, display: true)
+            miniTimerHostingView?.frame = NSRect(x: 0, y: 0, width: 300, height: height)
+            timerWindow.orderFrontRegardless()
+        } else {
+            timerWindow.orderOut(nil)
+        }
+
+        let iconFrame = NSRect(x: screenMidX + 150 - 26, y: screenTopY - height, width: 32, height: height)
+        if showPills && onBreak {
+            coffeeWindow.setFrame(iconFrame, display: true)
+            coffeeWindow.orderFrontRegardless()
+            focusWindow.orderOut(nil)
+        } else if showPills {
+            focusWindow.setFrame(iconFrame, display: true)
+            focusWindow.orderFrontRegardless()
+            coffeeWindow.orderOut(nil)
+        } else {
+            coffeeWindow.orderOut(nil)
+            focusWindow.orderOut(nil)
+        }
     }
 
     private func setupMouseMonitoring() {
-        Timer.publish(every: 0.05, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.checkMousePosition()
-            }
-            .store(in: &cancellables)
+        removeEventMonitors()
+
+        let mouseMask: NSEvent.EventTypeMask = [.mouseMoved, .leftMouseDragged, .rightMouseDragged]
+        globalMouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: mouseMask) { [weak self] _ in
+            self?.checkMousePosition()
+        }
+        localMouseMonitor = NSEvent.addLocalMonitorForEvents(matching: mouseMask) { [weak self] event in
+            self?.checkMousePosition()
+            return event
+        }
 
         globalClickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             guard let self, viewModel.notchState == .expanded else { return }
             guard let windowFrame = window?.frame else { return }
-            let clickLocation = NSEvent.mouseLocation
-            if !windowFrame.contains(clickLocation) {
+            if !windowFrame.contains(NSEvent.mouseLocation) {
                 viewModel.collapseNotch()
             }
         }
+
+        viewModel.pomodoroViewModel.$isRunning
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.checkMousePosition()
+            }
+            .store(in: &cancellables)
     }
 
-    private func checkMousePosition() {
-        guard isInitialPositionSet else { return }
+    private func removeEventMonitors() {
+        [globalClickMonitor, globalMouseMonitor, localMouseMonitor].compactMap { $0 }.forEach {
+            NSEvent.removeMonitor($0)
+        }
+        globalClickMonitor = nil
+        globalMouseMonitor = nil
+        localMouseMonitor = nil
+    }
 
-        let mouseLocation = NSEvent.mouseLocation
-        let pVM = viewModel.pomodoroViewModel
-
-        var detectionRegion = notchRegion
-        if pVM.isRunning {
-            let timerRect = NSRect(
+    private var hoverDetectionRegion: NSRect {
+        if viewModel.pomodoroViewModel.isRunning {
+            return NSRect(
                 x: screenMidX - 150,
                 y: screenTopY - notchRegion.height,
                 width: 306,
                 height: notchRegion.height
             )
-            detectionRegion = timerRect
         }
+        return notchRegion
+    }
 
-        let isInRegion = detectionRegion.contains(mouseLocation)
+    private func checkMousePosition() {
+        guard isInitialPositionSet else { return }
 
-        if viewModel.notchState == .collapsed && isInRegion {
+        let isInRegion = hoverDetectionRegion.contains(NSEvent.mouseLocation)
+        switch viewModel.notchState {
+        case .collapsed where isInRegion:
             viewModel.hoverEnter()
-        } else if viewModel.notchState == .hovering && !isInRegion {
+        case .hovering where !isInRegion:
             viewModel.hoverExit()
+        default:
+            break
         }
     }
 
@@ -327,6 +350,7 @@ class NotchWindowController: NSWindowController {
 
     @objc private func updatePosition() {
         setupInitialPosition()
+        updateMiniWindows()
     }
 }
 

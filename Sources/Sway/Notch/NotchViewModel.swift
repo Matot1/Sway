@@ -8,6 +8,17 @@ class NotchViewModel: ObservableObject {
     let pomodoroViewModel = PomodoroViewModel()
     let musicViewModel = MusicViewModel()
     let clipboardManager = ClipboardScreenshotManager()
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        $selectedTab
+            .combineLatest($notchState)
+            .sink { [weak self] tab, state in
+                guard tab == .manager, state == .expanded else { return }
+                self?.clipboardManager.pollNow()
+            }
+            .store(in: &cancellables)
+    }
 
     func toggleNotch() {
         switch notchState {
