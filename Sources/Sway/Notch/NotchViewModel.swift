@@ -7,6 +7,7 @@ class NotchViewModel: ObservableObject {
 
     let pomodoroViewModel = PomodoroViewModel()
     let musicViewModel = MusicViewModel()
+    let clipboardManager = ClipboardScreenshotManager()
 
     func toggleNotch() {
         switch notchState {

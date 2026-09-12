@@ -18,13 +18,14 @@ struct ExpandedNotchView: View {
     private var notchBar: some View {
         HStack(spacing: 8) {
             HStack(spacing: 4) {
-                tabButton(for: .timer)
                 tabButton(for: .music)
+                tabButton(for: .manager)
             }
 
             Spacer()
 
             HStack(spacing: 4) {
+                tabButton(for: .timer)
                 Button(action: {
                     viewModel.collapseNotch()
                     NotificationCenter.default.post(name: NSNotification.Name("OpenSwaySettings"), object: nil)
@@ -60,7 +61,7 @@ struct ExpandedNotchView: View {
             .padding(.vertical, 4)
             .background(
                 viewModel.selectedTab == tab
-                    ? tab == .music && theme != "monochrome" ? Color.red : ThemeColors.accent(theme)
+                    ? tabBackground(tab)
                     : Color.clear
             )
             .clipShape(Capsule())
@@ -73,6 +74,16 @@ struct ExpandedNotchView: View {
         .buttonStyle(.plain)
     }
 
+    private func tabBackground(_ tab: NotchTab) -> Color {
+        if tab == .music && theme != "monochrome" {
+            return Color.red
+        }
+        if tab == .manager && theme != "monochrome" {
+            return Color(red: 0.55, green: 0.45, blue: 0.15)
+        }
+        return ThemeColors.accent(theme)
+    }
+
     private var tabContent: some View {
         Group {
             switch viewModel.selectedTab {
@@ -80,6 +91,8 @@ struct ExpandedNotchView: View {
                 TimerView(viewModel: viewModel.pomodoroViewModel)
             case .music:
                 MusicPlayerView(viewModel: viewModel.musicViewModel)
+            case .manager:
+                ManagerView(clipboardManager: viewModel.clipboardManager)
             case .settings:
                 EmptyView()
             }

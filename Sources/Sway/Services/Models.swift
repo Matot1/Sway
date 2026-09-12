@@ -93,12 +93,14 @@ struct PomodoroConfig {
 enum NotchTab: String, CaseIterable {
     case timer = "Focus"
     case music = "Music"
+    case manager = "Manager"
     case settings = "Settings"
 
     var iconName: String {
         switch self {
         case .timer: return "timer"
         case .music: return "music.note"
+        case .manager: return "photo.on.rectangle"
         case .settings: return "gearshape"
         }
     }
