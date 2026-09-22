@@ -54,6 +54,6 @@ class NotchViewModel: ObservableObject {
     var hoveringWidth: CGFloat { 200 }
     var hoveringHeight: CGFloat { 42 }
 
-    var expandedWidth: CGFloat { 500 }
+    var expandedWidth: CGFloat { 520 }
     var expandedHeight: CGFloat { 110 }
 }

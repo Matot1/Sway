@@ -124,7 +124,12 @@ PYEOF
 
 echo "==> Committing appcast.xml..."
 git add "$APPCAST"
-git commit -m "Update appcast for v${VERSION}" 2>/dev/null || echo "    (nothing to commit)"
+if ! git diff --cached --quiet; then
+    TREE=$(git write-tree)
+    PARENT=$(git rev-parse HEAD)
+    NEW=$(git commit-tree "$TREE" -p "$PARENT" -m "Update appcast for v${VERSION}")
+    git reset --soft "$NEW"
+fi
 git push origin main 2>&1
 
 echo "==> Tagging..."

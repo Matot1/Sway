@@ -207,7 +207,9 @@ class PomodoroViewModel: ObservableObject {
     }
 
     private func completeCurrentState() {
-        NSSound.beep()
+        if UserDefaults.standard.bool(forKey: "soundAlerts") {
+            NSSound.beep()
+        }
 
         switch state {
         case .working:

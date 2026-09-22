@@ -28,17 +28,11 @@ macOS-приложение, превращающее челку (notch) в ин�
 - **Apple Music** — AppleScript, 2s polling, play/pause/next/prev, track info
 - **Yandex Music** — HID media key events, play/pause/next/prev (MediaRemote). Без названия трека (Electron-приложение не публикует now playing info). Иконка пламени при фокусе, чашки при кофе.
 
-## Full Concentration
-
-- **Sound Alerts** — вкл/выкл звуков приложения (toggle)
-- **Full Concentration** — заглушка (системный DND не удалось реализовать — XPC сервис требует entitlements, AppleScript требует Accessibility и нестабилен)
-
 ## Settings
 
-- Окно 480×360, тёмный фон, вкладки: General / Timer / Notification / About
-- General: автозапуск, язык (en/ru), выход
+- Окно 480×360, тёмный фон, вкладки: General / Timer / About
+- General: автозапуск, язык (en/ru), тема, звуковые оповещения
 - Timer: длительности сессий, количество сессий до long break
-- Notification: Sound Alerts, Full Concentration
 - About: версия, разработчик, технологии
 
 ## Технологии

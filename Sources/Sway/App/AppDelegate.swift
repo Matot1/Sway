@@ -12,7 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         UserDefaults.standard.register(defaults: [
             "soundAlerts": true,
-            "fullConcentration": false,
             "autoStartBreak": false,
         ])
 

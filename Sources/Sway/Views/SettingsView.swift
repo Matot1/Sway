@@ -4,14 +4,12 @@ import ServiceManagement
 enum SettingsTab: String, CaseIterable {
     case general = "General"
     case timer = "Timer"
-    case notification = "Notification"
     case about = "About"
 
     var icon: String {
         switch self {
         case .general: return "gearshape"
         case .timer: return "timer"
-        case .notification: return "bell"
         case .about: return "info.circle"
         }
     }
@@ -59,8 +57,6 @@ struct SettingsView: View {
                     GeneralSettingsView()
                 case .timer:
                     TimerSettingsView()
-                case .notification:
-                    NotificationSettingsView()
                 case .about:
                     AboutSettingsView()
                 }
@@ -89,30 +85,20 @@ struct GeneralSettingsView: View {
     @AppStorage("launchAtLogin") private var launchAtLogin = false
     @AppStorage("theme") private var theme: String = "dark"
     @AppStorage("musicProvider") private var musicProvider: String = MusicProvider.yandexMusic.storageKey
+    @AppStorage("soundAlerts") private var soundAlerts = true
 
-    private var themeLabel: String {
+    private var themeKey: String {
         switch theme {
-        case "light": return tr("Light")
-        case "monochrome": return tr("Monochrome")
-        default: return tr("Default")
+        case "light": return "Light"
+        case "monochrome": return "Monochrome"
+        default: return "Default"
         }
     }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
-                HStack(spacing: 10) {
-                    Image(systemName: "bolt.circle")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    Text(tr("Launch at Login"))
-                        .font(.custom("Forza Thin", size: 12))
-                        .foregroundColor(.white)
-
-                    Spacer()
-
+                generalRow(icon: "bolt.circle", title: "Launch at Login") {
                     Toggle("", isOn: $launchAtLogin)
                         .toggleStyle(.switch)
                         .tint(.orange)
@@ -124,128 +110,88 @@ struct GeneralSettingsView: View {
                             }
                         }
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                HStack(spacing: 10) {
-                    Image(systemName: "music.note")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(tr("Music Integration"))
-                            .font(.custom("Forza Thin", size: 12))
-                            .foregroundColor(.white)
-                        Text(tr("Choose your music service"))
-                            .font(.custom("Forza Thin", size: 10))
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-
-                    Spacer()
-
-                    Menu {
+                generalRow(icon: "music.note", title: "Music Integration") {
+                    compactMenu(MusicProvider.fromStorageKey(musicProvider)?.rawValue ?? musicProvider) {
                         ForEach(MusicProvider.allCases, id: \.self) { provider in
-                            Button {
+                            Button(tr(provider.rawValue)) {
                                 musicProvider = provider.storageKey
-                            } label: {
-                                Text(tr(provider.rawValue))
                             }
                         }
-                    } label: {
-                        Text(tr(MusicProvider.fromStorageKey(musicProvider)?.rawValue ?? musicProvider))
-                            .foregroundColor(.orange)
-                            .font(.custom("Forza Thin", size: 12))
                     }
-                    .menuStyle(.borderlessButton)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                HStack(spacing: 10) {
-                    Image(systemName: "globe")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    Text(tr("Language"))
-                        .font(.custom("Forza Thin", size: 12))
-                        .foregroundColor(.white)
-
-                    Spacer()
-
-                    Menu {
-                        Button {
-                            loc.setLanguage("en")
-                        } label: {
-                            Text(tr("English"))
-                        }
-                        Button {
-                            loc.setLanguage("ru")
-                        } label: {
-                            Text(tr("Russian"))
-                        }
-                    } label: {
-                        Text(tr(loc.language == "ru" ? "Russian" : "English"))
-                            .foregroundColor(.orange)
-                            .font(.custom("Forza Thin", size: 12))
+                generalRow(icon: "globe", title: "Language") {
+                    compactMenu(loc.language == "ru" ? "Russian" : "English") {
+                        Button(tr("English")) { loc.setLanguage("en") }
+                        Button(tr("Russian")) { loc.setLanguage("ru") }
                     }
-                    .menuStyle(.borderlessButton)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                HStack(spacing: 10) {
-                    Image(systemName: "paintpalette")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    Text(tr("Theme"))
-                        .font(.custom("Forza Thin", size: 12))
-                        .foregroundColor(.white)
-
-                    Spacer()
-
-                    Menu {
-                        Button {
-                            theme = "dark"
-                        } label: {
-                            Text(tr("Default"))
-                        }
-                        Button {
-                            theme = "light"
-                        } label: {
-                            Text(tr("Light"))
-                        }
-                        Button {
-                            theme = "monochrome"
-                        } label: {
-                            Text(tr("Monochrome"))
-                        }
-                    } label: {
-                        Text(themeLabel)
-                            .foregroundColor(.orange)
-                            .font(.custom("Forza Thin", size: 12))
+                generalRow(icon: "paintpalette", title: "Theme") {
+                    compactMenu(themeKey) {
+                        Button(tr("Default")) { theme = "dark" }
+                        Button(tr("Light")) { theme = "light" }
+                        Button(tr("Monochrome")) { theme = "monochrome" }
                     }
-                    .menuStyle(.borderlessButton)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
+                generalRow(icon: "bell", title: "Sound Alerts") {
+                    Toggle("", isOn: $soundAlerts)
+                        .toggleStyle(.switch)
+                        .tint(.orange)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func generalRow<Trailing: View>(
+        icon: String,
+        title: String,
+        @ViewBuilder trailing: () -> Trailing
+    ) -> some View {
+        ZStack {
+            Toggle("", isOn: .constant(false))
+                .toggleStyle(.switch)
+                .opacity(0)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.6))
+                    .frame(width: 20)
+
+                Text(tr(title))
+                    .font(.custom("Forza Thin", size: 12))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                Spacer(minLength: 8)
+
+                trailing()
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.05))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func compactMenu<Content: View>(_ titleKey: String, @ViewBuilder content: () -> Content) -> some View {
+        Menu(content: content) {
+            Text(tr(titleKey))
+                .foregroundColor(.orange)
+                .font(.custom("Forza Thin", size: 12))
+        }
+        .menuStyle(.borderlessButton)
+        .controlSize(.small)
+        .fixedSize(horizontal: true, vertical: true)
+        .frame(height: 16)
     }
 }
 
@@ -350,84 +296,13 @@ struct DurationRow: View {
     }
 }
 
-// MARK: - Notification
-
-struct NotificationSettingsView: View {
-    @ObservedObject var loc = LanguageManager.shared
-    @AppStorage("soundAlerts") private var soundAlerts = true
-    @AppStorage("fullConcentration") private var fullConcentration = false
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
-                HStack(spacing: 10) {
-                    Image(systemName: "bell")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(tr("Sound Alerts"))
-                            .font(.custom("Forza Thin", size: 12))
-                            .foregroundColor(.white)
-                        Text(tr("Turn on/off sounds app"))
-                            .font(.custom("Forza Thin", size: 10))
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-
-                    Spacer()
-
-                    Toggle("", isOn: $soundAlerts)
-                        .toggleStyle(.switch)
-                        .tint(.orange)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-
-                HStack(spacing: 10) {
-                    Image(systemName: "moon.zzz.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(width: 20)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(tr("Full Concentration"))
-                            .font(.custom("Forza Thin", size: 12))
-                            .foregroundColor(.white)
-                        Text(tr("Disable macOS notification when timer starting"))
-                            .font(.custom("Forza Thin", size: 10))
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-
-                    Spacer()
-
-                    Toggle("", isOn: $fullConcentration)
-                        .toggleStyle(.switch)
-                        .tint(.orange)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, 12)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.vertical, 12)
-    }
-
-}
-
 // MARK: - About
 
 struct AboutSettingsView: View {
     @ObservedObject var loc = LanguageManager.shared
 
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.6"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.4.7"
     }
 
     var body: some View {

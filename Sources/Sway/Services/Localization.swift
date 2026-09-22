@@ -24,7 +24,6 @@ enum Localization {
         "en": [
             "General": "General",
             "Timer": "Timer",
-            "Notification": "Notification",
             "About": "About",
             "Settings": "Settings",
             "Focus": "Focus",
@@ -58,8 +57,6 @@ enum Localization {
 
             "Sound Alerts": "Sound Alerts",
             "Turn on/off sounds app": "Turn on/off sounds app",
-            "Full Concentration": "Full Concentration",
-            "Disable macOS notification when timer starting": "Open Focus settings to enable",
 
             "Sway": "Sway",
             "Version 0.3.5": "Version 0.3.5",
@@ -92,7 +89,6 @@ enum Localization {
             "Automatically start break after focus session": "Автоматически начинать перерыв после сессии",
             "General": "Основные",
             "Timer": "Таймер",
-            "Notification": "Уведомления",
             "About": "О программе",
             "Settings": "Настройки",
             "Focus": "Фокус",
@@ -126,8 +122,6 @@ enum Localization {
 
             "Sound Alerts": "Звуковые оповещения",
             "Turn on/off sounds app": "Вкл/выкл звуки приложения",
-            "Full Concentration": "Полная концентрация",
-            "Disable macOS notification when timer starting": "Открыть настройки Focus для включения",
 
             "Sway": "Sway",
             "Version 0.3.5": "Версия 0.3.5",

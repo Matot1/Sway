@@ -16,13 +16,13 @@ struct ExpandedNotchView: View {
     }
 
     private var notchBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             HStack(spacing: 4) {
                 tabButton(for: .music)
                 tabButton(for: .manager)
             }
 
-            Spacer()
+            Spacer(minLength: 0)
 
             HStack(spacing: 4) {
                 tabButton(for: .timer)
@@ -35,15 +35,17 @@ struct ExpandedNotchView: View {
                             .font(.system(size: 11, weight: .semibold))
                         Text(tr("Settings"))
                             .font(.system(size: 9, weight: .medium))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 6)
                     .padding(.vertical, 4)
                     .foregroundColor(ThemeColors.secondaryText(theme))
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 10)
         .padding(.vertical, 8)
     }
 
@@ -56,8 +58,10 @@ struct ExpandedNotchView: View {
                     .font(.system(size: 11, weight: .semibold))
                 Text(tr(tab.rawValue))
                     .font(.system(size: 9, weight: .medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 6)
             .padding(.vertical, 4)
             .background(
                 viewModel.selectedTab == tab
