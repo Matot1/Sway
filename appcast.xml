@@ -5,6 +5,17 @@
     <description>Most recent changes with links to updates.</description>
     <language>en</language>
     <item>
+      <title>Version 0.4.7</title>
+      <pubDate>Tue, 22 Sep 2026 21:59:40 +0300</pubDate>
+      <sparkle:version>0.4.7</sparkle:version>
+      <sparkle:shortVersionString>0.4.7</sparkle:shortVersionString>
+      <description>Rebalanced worked app</description>
+      <enclosure url="https://github.com/Matot1/Sway/releases/download/v0.4.7/Sway-v0.4.7.zip"
+                 sparkle:edSignature="QNdvqFiCjjLfNY47ao+zaAL20OS9V+1q4g+yiZJyvmR6X3yzN5NpRtjFLcJ/qgk5fAGnGYpPk+55r2nHnTWXBw=="
+                 length="3455763"
+                 type="application/octet-stream"/>
+    </item>
+    <item>
       <title>Version 0.4.6</title>
       <pubDate>Sat, 12 Sep 2026 21:50:41 +0300</pubDate>
       <sparkle:version>0.4.6</sparkle:version>
